@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Surf Advisor K8S controller"
+Parameters:
+  AZ:
+    Type: String
+    Default: eu-central-1a
+  KopsRole:
+    Type: String
+    Default: "kops"
+
+Resources:
+  SurfDNS:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneName: thesurfadvisor.com.
+      RecordSets:
+        - Name: k8s.thesurfadvisor.com.
+          Type: A
+          TTL: '900'
+          ResourceRecords:
+            - !GetAtt KopsInstance.PublicIp
+
+  KopsInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - Ref: KopsRole
+
+  KopsInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone:
+        Ref: AZ
+      ImageId: ami-07f1fbbff759e24dd
+      InstanceType: t2.micro
+      IamInstanceProfile:
+        Ref: KopsInstanceProfile
+
