@@ -7,6 +7,9 @@ Parameters:
   KopsRole:
     Type: String
     Default: "kops"
+  SourceCodeBucket:
+    Type: String
+    Default: repo.surf.advisor
 
 Resources:
   SurfDNS:
@@ -37,4 +40,21 @@ Resources:
       InstanceType: t2.micro
       IamInstanceProfile:
         Ref: KopsInstanceProfile
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+            - ''
+            - - "#!/bin/bash\n"
+              - "set -x"
+              - "\n"
+              - "exec > >(tee /home/ec2-user/user-data.log|logger -t user-data ) 2>&1"
+              - "\n"
+              - "aws s3 cp s3://"
+              - Ref: SourceCodeBucket
+              - "/k8s-bootstrap-init.sh /home/ec2-user/k8s-init.sh"
+              - "\n"
+              - "chmod +x /home/ec2-user/k8s-init.sh"
+              - "\n"
+              - "bash /home/ec2-user/k8s-init.sh"
+              - "\n"
 

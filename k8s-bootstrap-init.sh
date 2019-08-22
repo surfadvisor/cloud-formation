@@ -1,3 +1,7 @@
+exec > >(tee /home/ec2-user/init-log.log|logger -t init-log ) 2>&1
+
+echo $(pwd) > /home/ec2-user/init-pwd.out
+
 yum update -y
 yum install jq -y
 
@@ -20,6 +24,9 @@ mv ./kops /usr/local/bin/
 #aws iam create-user --user-name kops
 #aws iam add-user-to-group --user-name kops --group-name kops
 
+aws iam list-access-keys --user-name kops > kopsCreds.json
+aws iam delete-access-key --access-key $(jq -r '.AccessKeyMetadata[0].AccessKeyId' kopsCreds.json) --user-name kops
+
 aws iam create-access-key --user-name kops > kopsCreds.json
 
 export AWS_ACCESS_KEY_ID=$(jq -r '.AccessKey.AccessKeyId' kopsCreds.json)
@@ -37,6 +44,10 @@ export AWS_AVAILABILITY_ZONES=eu-central-1a,eu-central-1b,eu-central-1c
 
 export NAME=surfadvisor.k8s.local
 export KOPS_STATE_STORE=s3://surf-advisor-state-store
+
+echo '#!/bin/sh' > /etc/profile.d/env-setup.sh
+printf '\n' >> /etc/profile.d/env-setup.sh
+printenv | sed -e 's/^/export /g' >> /etc/profile.d/env-setup.sh
 
 ssh-keygen -b 2048 -t rsa -f /home/ec2-user/.ssh/id_rsa -q -N ""
 kops create secret --name ${NAME} sshpublickey admin -i /home/ec2-user/.ssh/id_rsa.pub
