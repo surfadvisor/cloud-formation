@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: source code repo access users
+
+Parameters:
+  SourceCodeBucket:
+    Type: String
+    Default: repo.surf.advisor
+
+Resources:
+
+  repoReadWriteUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: 'repoReadWriteAccess'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+                - s3:ListBucket
+                - s3:GetObject
+                - s3:PutObject
+                - s3:DeleteObject
+              Resource:
+                - Fn::Join:
+                    - ''
+                    - - 'arn:aws:s3:::'
+                      - Ref: SourceCodeBucket
+                      - '/*'
+                - Fn::Join:
+                    - ''
+                    - - 'arn:aws:s3:::'
+                      - Ref: SourceCodeBucket
+
+  repoReadOnlyUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: 'repoReadOnlyAccess'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetObject
+                Resource:
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Ref: SourceCodeBucket
+                        - '/*'
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Ref: SourceCodeBucket
+
+  repoReadWriteUserKeys:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref repoReadWriteUser
+
+  repoReadOnlyUserKeys:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref repoReadOnlyUser
+
+Outputs:
+  rwAccessKey:
+    Value: !Ref repoReadWriteUserKeys
+    Description: AWSAccessKeyId of RW
+  rwSecretKey:
+    Value: !GetAtt [repoReadWriteUserKeys, SecretAccessKey]
+    Description: AWSSecretAccessKey of RW
+  roAccessKey:
+    Value: !Ref repoReadOnlyUserKeys
+    Description: AWSAccessKeyId of RO
+  roSecretKey:
+    Value: !GetAtt [repoReadOnlyUserKeys, SecretAccessKey]
+    Description: AWSSecretAccessKey of RO
