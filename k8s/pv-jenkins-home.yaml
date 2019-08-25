@@ -1,0 +1,37 @@
+---
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: jenkins-home-pv
+  labels:
+    type: amazonEBS
+    purpose: jenkins-home
+spec:
+  capacity:
+    storage: 60Gi
+  accessModes:
+  - ReadWriteOnce
+  awsElasticBlockStore:
+    fsType: ext4
+    volumeID: <X>
+  storageClassName: gp2
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: jenkins-home-pvc
+  labels:
+    purpose: jenkins-home
+    type: amazonEBS
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 60Gi
+  selector:
+    matchLabels:
+      purpose: jenkins-home

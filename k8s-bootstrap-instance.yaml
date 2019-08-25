@@ -49,12 +49,13 @@ Resources:
               - "\n"
               - "exec > >(tee /home/ec2-user/user-data.log|logger -t user-data ) 2>&1"
               - "\n"
-              - "aws s3 cp s3://"
+              - "export REPO_BUCKET="
               - Ref: SourceCodeBucket
-              - "/k8s-bootstrap-init.sh /home/ec2-user/k8s-init.sh"
               - "\n"
-              - "chmod +x /home/ec2-user/k8s-init.sh"
+              - "aws s3 sync s3://${REPO_BUCKET} /home/ec2-user/config"
               - "\n"
-              - "bash /home/ec2-user/k8s-init.sh"
+              - "chmod +x /home/ec2-user/config/k8s-bootstrap-init.sh"
+              - "\n"
+              - "bash /home/ec2-user/config/k8s-bootstrap-init.sh"
               - "\n"
 

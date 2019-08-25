@@ -1,0 +1,129 @@
+# Default values for jenkins.
+
+master:
+  adminPassword: <X>
+  installPlugins:
+    - ansicolor:0.6.2
+    - authentication-tokens:1.3
+    - blueocean-autofavorite:1.18.1
+    - blueocean:1.18.1
+    - blueocean-pipeline-editor:1.18.1
+    - branch-api:2.5.4
+    - blueocean-commons:1.18.1
+    - blueocean-config:1.18.1
+    - credentials-binding:1.13
+    - credentials:2.1.16
+    - blueocean-dashboard:1.18.1
+    - display-url-api:2.0
+    - blueocean-display-url:2.1.0
+    - docker-commons:1.15
+    - docker-workflow:1.19
+    - durable-task:1.14
+    - blueocean-events:1.18.1
+    - favorite:2.3.0
+    - cloudbees-folder:6.1.2
+    - git-server:1.7
+    - blueocean-git-pipeline:1.18.1
+    - git-client:2.5.0
+    - git:3.5.1
+    - github-api:1.86
+    - github-branch-source:2.2.3
+    - blueocean-github-pipeline:1.18.1
+    - github:1.28.0
+    - htmlpublisher:1.14
+    - icon-shim:2.0.3
+    - blueocean-jira:1.18.1
+    - jira:2.4.2
+    - junit:1.21
+    - blueocean-jwt:1.18.1
+    - jackson2-api:2.7.3
+    - ace-editor:1.1
+    - handlebars:1.1.1
+    - momentjs:1.1.1
+    - jquery-detached:1.2.1
+    - kubernetes:1.18.1
+    - mailer:1.20
+    - matrix-project:1.11
+    - mercurial:2.1
+    - blueocean-personalization:1.18.1
+    - workflow-aggregator:2.6
+    - pipeline-graph-analysis:1.10
+    - blueocean-pipeline-scm-api:1.18.1
+    - blueocean-pipeline-api-impl:1.18.1
+    - workflow-api:2.20
+    - workflow-basic-steps:2.18
+    - pipeline-build-step:2.9
+    - pipeline-model-declarative-agent:1.1.1
+    - pipeline-model-extensions:1.3.9
+    - pipeline-github-lib:1.0
+    - workflow-cps:2.73
+    - pipeline-input-step:2.10
+    - workflow-job:2.34
+    - pipeline-milestone-step:1.3.1
+    - pipeline-model-api:1.3.9
+    - pipeline-model-definition:1.3.9
+    - workflow-multibranch:2.21
+    - workflow-durable-task-step:2.33
+    - pipeline-rest-api:2.9
+    - workflow-scm-step:2.6
+    - workflow-cps-global-lib:2.15
+    - pipeline-stage-step:2.2
+    - pipeline-stage-tags-metadata:1.3.9
+    - pipeline-stage-view:2.9
+    - workflow-step-api:2.13
+    - workflow-support:3.3
+    - plain-credentials:1.4
+    - pubsub-light:1.12
+    - blueocean-rest:1.18.1
+    - blueocean-rest-impl:1.18.1
+    - scm-api:2.2.2
+    - ssh-credentials:1.13
+    - script-security:1.34
+    - sse-gateway:1.15
+    - structs:1.10
+    - token-macro:2.3
+    - variant:1.1
+    - blueocean-web:1.18.1
+    - bouncycastle-api:2.17
+    - blueocean-i18n:1.18.1
+
+  # Used to approve a list of groovy functions in pipelines used the script-security plugin. Can be viewed under /scriptApproval
+  scriptApproval:
+    - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
+    - "new groovy.json.JsonSlurperClassic"
+    - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods leftShift java.util.Map java.util.Map"
+    - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods split java.lang.String"
+  # List of groovy init scripts to be executed during Jenkins master start
+
+persistence:
+  enabled: true
+  ## A manually managed Persistent Volume and Claim
+  ## Requires Persistence.Enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  existingClaim: jenkins-home-pvc
+
+  ## jenkins data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # StorageClass: "-"
+
+  accessMode: ReadWriteOnce
+  size: 8Gi
+ # volumes:
+  #  - name: nothing
+  #    emptyDir: {}
+ # mounts:
+#  - mountPath: /var/nothing
+#    name: nothing
+#    readOnly: true
+
+networkPolicy:
+  # Enable creation of NetworkPolicy resources.
+  enabled: false
+  # For Kubernetes v1.4, v1.5 and v1.6, use 'extensions/v1beta1'
+  # For Kubernetes v1.7, use 'networking.k8s.io/v1'
+  apiVersion: networking.k8s.io/v1
