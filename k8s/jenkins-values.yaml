@@ -1,6 +1,9 @@
 # Default values for jenkins.
 
 master:
+  serviceType: ClusterIP
+  servicePort: 8080
+  targetPort: 8080
   adminPassword: <X>
   installPlugins:
     - ansicolor:0.6.2

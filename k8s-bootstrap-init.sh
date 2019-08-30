@@ -75,4 +75,6 @@ kops update cluster ${NAME} --yes
 
 # sleep 8m; helm init; sleep 30s; bash /home/ec2-user/config/install-jenkins.sh
 
+kubectl apply -f /home/ec2-user/config/k8s/ingress
+
 #### kops delete cluster --name ${NAME} --yes

@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: jenkins.thesurfadvisor.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: jenkins-stg
+              servicePort: 8080
