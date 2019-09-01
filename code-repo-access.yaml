@@ -56,12 +56,41 @@ Resources:
                       - - 'arn:aws:s3:::'
                         - Ref: SourceCodeBucket
 
+  codeRepoReadOnlyUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: 'codeRepoReadOnlyAccess'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetObject
+                Resource:
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Ref: SourceCodeBucket
+                        - '/release/*'
+                  - Fn::Join:
+                      - ''
+                      - - 'arn:aws:s3:::'
+                        - Ref: SourceCodeBucket
+                        - '/release'
+
   repoReadWriteUserKeys:
     Type: AWS::IAM::AccessKey
     Properties:
       UserName: !Ref repoReadWriteUser
 
   repoReadOnlyUserKeys:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref repoReadOnlyUser
+
+  codeRepoReadOnlyUserKeys:
     Type: AWS::IAM::AccessKey
     Properties:
       UserName: !Ref repoReadOnlyUser
@@ -79,3 +108,9 @@ Outputs:
   roSecretKey:
     Value: !GetAtt [repoReadOnlyUserKeys, SecretAccessKey]
     Description: AWSSecretAccessKey of RO
+  croAccessKey:
+    Value: !Ref codeRepoReadOnlyUserKeys
+    Description: AWSAccessKeyId of CRO
+  croSecretKey:
+    Value: !GetAtt [codeRepoReadOnlyUserKeys, SecretAccessKey]
+    Description: AWSSecretAccessKey of CRO

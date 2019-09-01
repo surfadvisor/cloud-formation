@@ -9,7 +9,7 @@ aws ec2 create-volume --size=60 --volume-type=gp2 \
     > ebsVolume.json
 
 export JENKINS_EBS_VOL_ID=$(jq -r '.VolumeId' ebsVolume.json)
-export JENKINS_ADMIN_PASS=$(jq -r '.AdminPassword' /home/ec2-user/config/secrets/jenkins-secrets.json)
+export JENKINS_ADMIN_PASS=$(jq -r '.AdminPassword' /home/ec2-user/config/secrets/jenkins-secrets)
 
 sed -ri 's/^(\s*)(volumeID\s*:\s*<X>\s*$)/\1volumeID: '"$JENKINS_EBS_VOL_ID"'/' \
     /home/ec2-user/config/k8s/pv-jenkins-home.yaml
@@ -24,5 +24,7 @@ kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admi
 kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
 
 #helm install --name jenkins-stg --kube-context=${NAME} -f /home/ec2-user/config/k8s/jenkins-values.yaml stable/jenkins
+
+kubectl --context=${NAME} apply -f /home/ec2-user/config/k8s/jenkins-role.yaml
 
 ##### helm del --purge jenkins-stg
