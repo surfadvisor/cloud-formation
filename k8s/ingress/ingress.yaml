@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
     - host: jenkins.thesurfadvisor.com
@@ -13,3 +13,10 @@ spec:
             backend:
               serviceName: jenkins-stg
               servicePort: 8080
+    - host: thesurfadvisor.com
+      http:
+        paths:
+          - path: /dictionary/.*
+            backend:
+              serviceName: surf-dictionary
+              servicePort: 5001
