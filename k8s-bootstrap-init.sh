@@ -22,7 +22,7 @@ mv linux-amd64/helm /usr/local/bin/
 rm helm-v2.14.3-linux-amd64.tar.gz
 rm -rf ./linux-amd64/
 
-chmod +x /home/ec2-user/config/install-jenkins.sh
+chmod -R +x /home/ec2-user/config
 
 chown -R ec2-user:ec2-user /home/ec2-user/config
 
@@ -73,8 +73,6 @@ kops create cluster  --name ${NAME} --zones $(echo "$AWS_AVAILABILITY_ZONES") \
 
 kops update cluster ${NAME} --yes
 
-# sleep 8m; kubectl apply -f /home/ec2-user/config/secrets; helm init; sleep 30s; bash /home/ec2-user/config/install-jenkins.sh
-
-# kubectl apply -f /home/ec2-user/config/k8s/ingress
+# sleep 8m; kubectl apply -f /home/ec2-user/config/secrets; helm init; sleep 30s; bash /home/ec2-user/config/install-jenkins.sh; bash /home/ec2-user/config/install-istio.sh
 
 #### kops delete cluster --name ${NAME} --yes
