@@ -77,7 +77,6 @@ function envoy_on_request(request_handle)
 
     log(request_handle, "Received response from auth service now")
     log(request_handle, "response_headers: " .. dump(response_headers))
-    log(request_handle, "response_body: " .. response_body)
 
     if tonumber(response_headers[":status"]) ~= 204 then
         request_handle:logInfo("[" .. cluster .. "] Failed")
