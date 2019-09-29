@@ -33,6 +33,12 @@ function envoy_on_request(request_handle)
     path = get_header(request_handle, ":path")
     local host = get_header(request_handle, ":authority")
 
+    --TODO: whitelist jenkins on the upper level
+    if host == 'jenkins.thesurfadvisor.com' then
+        log(request_handle, "Jenkins call: " .. path .. ", host: " .. host)
+        return
+    end
+
     log(request_handle, "START DISPLAYING REQUEST HEADERS")
     local log_headers = request_handle:headers()
     for key, value in pairs(log_headers) do

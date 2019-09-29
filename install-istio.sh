@@ -9,6 +9,8 @@ wget https://github.com/istio/istio/releases/download/${ISTIO_VER}/istio-${ISTIO
 tar zxvf istio-${ISTIO_VER}-linux.tar.gz
 rm istio-${ISTIO_VER}-linux.tar.gz
 
+mv istio-${ISTIO_VER}/bin/istioctl /usr/local/bin/istioctl
+
 kubectl create namespace istio-system
 
 helm template istio-${ISTIO_VER}/install/kubernetes/helm/istio \
