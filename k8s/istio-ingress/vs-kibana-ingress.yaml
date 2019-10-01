@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: vs-grafana-ingress
+spec:
+  hosts:
+    - "kibana.thesurfadvisor.com"
+  gateways:
+    - http-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: kibana-logging.kube-system.svc.cluster.local
+            port:
+              number: 5601
