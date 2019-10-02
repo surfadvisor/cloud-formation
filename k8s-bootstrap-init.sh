@@ -73,6 +73,6 @@ kops create cluster  --name ${NAME} --zones $(echo "$AWS_AVAILABILITY_ZONES") \
 
 kops update cluster ${NAME} --yes
 
-# sleep 8m; kubectl apply -f /home/ec2-user/config/secrets; kubectl apply -f /home/ec2-user/config/k8s/elk-stack; helm init; sleep 30s; bash /home/ec2-user/config/install-jenkins.sh; bash /home/ec2-user/config/install-istio.sh
+# sleep 8m; kubectl apply -f /home/ec2-user/config/secrets; kubectl apply -f /home/ec2-user/config/k8s/elk-stack; helm init; sleep 30s; bash /home/ec2-user/config/install-jenkins.sh; sleep 30s; bash /home/ec2-user/config/install-monitoring.sh; sleep 30s; bash /home/ec2-user/config/install-istio.sh;
 
 #### kops delete cluster --name ${NAME} --yes

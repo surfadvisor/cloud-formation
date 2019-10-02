@@ -1,7 +1,5 @@
-
--- add a version to ensure the config's been swapped out while iterating on code changes
 function version()
-    return "v0.0.4"
+    return "v0.0.5"
 end
 
 function log(handle, value)
@@ -37,13 +35,10 @@ function envoy_on_request(request_handle)
     path = get_header(request_handle, ":path")
     local host = get_header(request_handle, ":authority")
 
-    --TODO: whitelist jenkins on the upper level
-    if host == 'jenkins.thesurfadvisor.com' then
-        log(request_handle, "Jenkins call: " .. path .. ", host: " .. host)
-        return
-    end
-    if host == 'kibana.thesurfadvisor.com' then
-        log(request_handle, "Kibana call: " .. path .. ", host: " .. host)
+    --TODO: whitelist tools on the higher level
+    local toolHost = host:match("%a+%.thesurfadvisor.com")
+    if toolHost then
+        log(request_handle, "Tool call: " .. toolHost .. ", path:".. path)
         return
     end
 
