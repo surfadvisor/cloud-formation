@@ -12,11 +12,15 @@ spec:
         inlineCode: |
             -- add a version to ensure the config's been swapped out while iterating on code changes
             function version()
-                return "v0.0.2"
+                return "v0.0.4"
             end
 
             function log(handle, value)
-                handle:logInfo(version() .. ": " .. value)
+                handle:logInfo(rqID(handle) .. "|" .. version() .. ": " .. value)
+            end
+
+            function rqID(request_handle)
+                return get_header(request_handle, "x-request-id")
             end
 
             -- dump a lua object into a string for logging
@@ -54,13 +58,6 @@ spec:
                     return
                 end
 
-                log(request_handle, "START DISPLAYING REQUEST HEADERS")
-                local log_headers = request_handle:headers()
-                for key, value in pairs(log_headers) do
-                    log(request_handle, "header key: " .. dump(key) .. ", header value: " .. dump(value))
-                end
-                log(request_handle, "END DISPLAYING REQUEST HEADERS")
-
                 -- Build a request for our authentication service before passing request upstream
                 local auth_host = "firebase-auth-connector.default.svc.cluster.local"
                 local auth_path = "/verify-token"
@@ -70,8 +67,7 @@ spec:
                     [":method"] = "GET",
                     [":path"] = auth_path,
                     [":authority"] = auth_host,
-                    ["x-request-id"] = get_header(request_handle, "x-request-id"),
-                    ["Authorization"] = get_header(request_handle, "Authorization"),
+                    ["x-request-id"] = rqID(request_handle),
                     ["target-method"] = get_header(request_handle, ":method"),
                     ["target-host"] = host,
                     ["target-path"] = path
@@ -82,7 +78,8 @@ spec:
 
                 log(request_handle, "Sending auth request, headers: " .. dump(request_headers) .. ", cluster: " .. cluster .. ", request_body: " .. request_body .. ", path: " .. auth_host)
 
-                log(request_handle, "Sending request to auth service now")
+                request_headers["Authorization"] = get_header(request_handle, "Authorization")
+
                 response_headers, response_body = request_handle:httpCall(
                         tostring(cluster),
                         request_headers,
@@ -90,11 +87,10 @@ spec:
                         timeout
                 )
 
-                log(request_handle, "Received response from auth service now")
                 log(request_handle, "response_headers: " .. dump(response_headers))
 
                 if tonumber(response_headers[":status"]) ~= 204 then
-                    request_handle:logInfo("[" .. cluster .. "] Failed")
+                    log(request_handle, "[" .. cluster .. "] Failed")
                     request_handle:respond(
                             { [":status"] = response_headers[":status"] },
                             response_body
