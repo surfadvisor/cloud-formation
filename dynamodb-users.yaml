@@ -35,10 +35,47 @@ Resources:
                 - dynamodb:PutItem
               Resource: arn:aws:dynamodb:*:*:table/DICT_ITEM
 
+  GeolocationTableUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+          - PolicyName: 'GeolocationTableAccess'
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Sid: ListAndDescribe
+                  Effect: Allow
+                  Action:
+                    - dynamodb:List*
+                    - dynamodb:DescribeReservedCapacity*
+                    - dynamodb:DescribeLimits
+                    - dynamodb:DescribeTimeToLive
+                  Resource: "*"
+                - Sid: SpecificTable
+                  Effect: Allow
+                  Action:
+                    - dynamodb:BatchGet*
+                    - dynamodb:DescribeStream
+                    - dynamodb:DescribeTable
+                    - dynamodb:Get*
+                    - dynamodb:Query
+                    - dynamodb:Scan
+                    - dynamodb:BatchWrite*
+                    - dynamodb:CreateTable
+                    - dynamodb:Delete*
+                    - dynamodb:Update*
+                    - dynamodb:PutItem
+                  Resource: arn:aws:dynamodb:*:*:table/GEOLOCATION
+
   DictionaryItemTableUserKeys:
     Type: AWS::IAM::AccessKey
     Properties:
       UserName: !Ref DictionaryItemTableUser
+
+  GeolocationTableUserKeys:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref GeolocationTableUser
 
 
 Outputs:
@@ -48,3 +85,9 @@ Outputs:
   SecretKey:
     Value: !GetAtt [DictionaryItemTableUserKeys, SecretAccessKey]
     Description: AWSSecretAccessKey of new user
+  GeolocationAccessKey:
+    Value: !Ref GeolocationTableUserKeys
+    Description: AWSAccessKeyId of Geolocation table user
+  GeolocationSecretKey:
+    Value: !GetAtt [GeolocationTableUserKeys, SecretAccessKey]
+    Description: AWSSecretAccessKey of Geolocation table user
