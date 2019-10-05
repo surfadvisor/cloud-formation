@@ -66,6 +66,13 @@ Resources:
                     - dynamodb:Update*
                     - dynamodb:PutItem
                   Resource: arn:aws:dynamodb:*:*:table/GEOLOCATION
+                - Sid: SpecificTableResources
+                  Effect: Allow
+                  Action:
+                    - dynamodb:Query
+                    - dynamodb:BatchGet*
+                    - dynamodb:Get*
+                  Resource: arn:aws:dynamodb:*:*:table/GEOLOCATION/*
 
   DictionaryItemTableUserKeys:
     Type: AWS::IAM::AccessKey
