@@ -74,6 +74,45 @@ Resources:
                     - dynamodb:Get*
                   Resource: arn:aws:dynamodb:*:*:table/GEOLOCATION/*
 
+  SpotTableUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+        - PolicyName: 'SpotTableAccess'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: ListAndDescribe
+                Effect: Allow
+                Action:
+                  - dynamodb:List*
+                  - dynamodb:DescribeReservedCapacity*
+                  - dynamodb:DescribeLimits
+                  - dynamodb:DescribeTimeToLive
+                Resource: "*"
+              - Sid: SpecificTable
+                Effect: Allow
+                Action:
+                  - dynamodb:BatchGet*
+                  - dynamodb:DescribeStream
+                  - dynamodb:DescribeTable
+                  - dynamodb:Get*
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:BatchWrite*
+                  - dynamodb:CreateTable
+                  - dynamodb:Delete*
+                  - dynamodb:Update*
+                  - dynamodb:PutItem
+                Resource: arn:aws:dynamodb:*:*:table/SPOT
+              - Sid: SpecificTableResources
+                Effect: Allow
+                Action:
+                  - dynamodb:Query
+                  - dynamodb:BatchGet*
+                  - dynamodb:Get*
+                Resource: arn:aws:dynamodb:*:*:table/SPOT/*
+
   DictionaryItemTableUserKeys:
     Type: AWS::IAM::AccessKey
     Properties:
@@ -83,6 +122,11 @@ Resources:
     Type: AWS::IAM::AccessKey
     Properties:
       UserName: !Ref GeolocationTableUser
+
+  SpotTableUserKeys:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref SpotTableUser
 
 
 Outputs:
@@ -98,3 +142,9 @@ Outputs:
   GeolocationSecretKey:
     Value: !GetAtt [GeolocationTableUserKeys, SecretAccessKey]
     Description: AWSSecretAccessKey of Geolocation table user
+  SpotAccessKey:
+    Value: !Ref SpotTableUserKeys
+    Description: AWSAccessKeyId of Spot table user
+  SpotSecretKey:
+    Value: !GetAtt [SpotTableUserKeys, SecretAccessKey]
+    Description: AWSSecretAccessKey of Spot table user
