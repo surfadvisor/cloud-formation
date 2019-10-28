@@ -16,7 +16,7 @@ master:
     - blueocean-config:1.18.1
     - credentials-binding:1.20
     - credentials:2.2.1
-    - kubernetes-credentials-provider:0.12.1
+    - kubernetes-credentials-provider:0.13
     - blueocean-dashboard:1.18.1
     - display-url-api:2.3.2
     - blueocean-display-url:2.1.0
@@ -41,7 +41,7 @@ master:
     - jira:3.0.9
     - junit:1.28
     - blueocean-jwt:1.18.1
-    - jackson2-api:2.9.9.1
+    - jackson2-api:2.9.10
     - ace-editor:1.1
     - handlebars:1.1.1
     - momentjs:1.1.1
