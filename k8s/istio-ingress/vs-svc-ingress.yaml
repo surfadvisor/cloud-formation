@@ -16,3 +16,19 @@ spec:
             host: surf-dictionary
             port:
               number: 5001
+    - match:
+        - uri:
+            prefix: /geolocation
+      route:
+        - destination:
+            host: geolocation-service
+            port:
+              number: 8080
+    - match:
+        - uri:
+            prefix: /spots
+      route:
+        - destination:
+            host: spot-service
+            port:
+              number: 8080
