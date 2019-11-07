@@ -29,7 +29,7 @@ master:
     - git-server:1.8
     - blueocean-git-pipeline:1.18.1
     - git-client:2.8.2
-    - git:3.12.0
+    - git:3.12.1
     - github-api:1.95
     - github-branch-source:2.3.2
     - blueocean-github-pipeline:1.18.1
@@ -41,7 +41,7 @@ master:
     - jira:3.0.9
     - junit:1.28
     - blueocean-jwt:1.18.1
-    - jackson2-api:2.9.10
+    - jackson2-api:2.10.0
     - ace-editor:1.1
     - handlebars:1.1.1
     - momentjs:1.1.1
@@ -84,7 +84,7 @@ master:
     - scm-api:2.6.3
     - ssh-credentials:1.17.1
     - script-security:1.62
-    - sse-gateway:1.15
+    - sse-gateway:1.17
     - structs:1.20
     - token-macro:2.3
     - variant:1.3
