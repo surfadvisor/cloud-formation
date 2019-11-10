@@ -32,3 +32,11 @@ spec:
             host: spot-service
             port:
               number: 8080
+    - match:
+        - uri:
+            prefix: /map-supplier
+      route:
+        - destination:
+            host: map-supplier
+            port:
+              number: 8080
