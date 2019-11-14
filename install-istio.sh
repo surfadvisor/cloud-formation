@@ -17,7 +17,7 @@ helm template istio-${ISTIO_VER}/install/kubernetes/helm/istio \
   --set global.mtls.enabled=false \
   --set tracing.enabled=true \
   --set grafana.enabled=true \
-  --set global.proxy.includeIPRanges="172.6.9.0/8" \
+  --set global.proxy.includeIPRanges="172.6.9.0/24" \
   --namespace istio-system > istio.yaml
 
 kubectl apply -f istio.yaml

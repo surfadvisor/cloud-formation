@@ -69,7 +69,9 @@ kops create secret --name ${NAME} sshpublickey admin -i /home/ec2-user/.ssh/id_r
 
 kops create cluster  --name ${NAME} --zones $(echo "$AWS_AVAILABILITY_ZONES") \
     --master-size m3.medium --master-count 1 \
-    --node-size t3.medium --node-count 2
+    --node-size t3.medium --node-count 2 \
+    --master-volume-size 20 \
+    --node-volume-size 20
 
 kops update cluster ${NAME} --yes
 
