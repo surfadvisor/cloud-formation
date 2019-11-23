@@ -13,6 +13,10 @@ GROUP_NAME="${INSTANCE_GROUP_NAME}.${NAME}"
 IAM_ROLE="masters.${NAME}"
 SSL_CERT_PATH="/etc/ssl/certs/ca-certificates.crt" # (/etc/ssl/certs for gce, /etc/ssl/certs/ca-bundle.crt for RHEL7.X)
 
+aws autoscaling update-auto-scaling-group \
+    --auto-scaling-group-name ${GROUP_NAME} \
+    --min-size ${MIN_NODES} --max-size ${MAX_NODES}
+
 addon=/home/ec2-user/config/k8s/autoscaling/cluster-autoscaler.yaml
 
 sed -i -e "s@{{CLOUD_PROVIDER}}@${CLOUD_PROVIDER}@g" "${addon}"
