@@ -73,8 +73,14 @@ kops create cluster  --name ${NAME} --zones $(echo "$AWS_AVAILABILITY_ZONES") \
     --master-volume-size 20 \
     --node-volume-size 20
 
+sleep 10s
+
+export KOPS_FEATURE_FLAGS=SpecOverrideFlag
+kops set cluster ${NAME} spec.kubelet.authenticationTokenWebhook=true
+kops set cluster ${NAME} spec.kubelet.authorizationMode=Webhook
+
 kops update cluster ${NAME} --yes
 
-# sleep 8m; kubectl apply -f /home/ec2-user/config/secrets; kubectl apply -f /home/ec2-user/config/k8s/elk-stack; helm init; sleep 30s; bash /home/ec2-user/config/install-jenkins.sh; sleep 30s; bash /home/ec2-user/config/install-monitoring.sh; sleep 30s; bash /home/ec2-user/config/install-istio.sh;
+# sleep 8m; kubectl apply -f /home/ec2-user/config/secrets; kubectl apply -f /home/ec2-user/config/k8s/elk-stack; helm init; sleep 30s; bash /home/ec2-user/config/install-jenkins.sh; sleep 30s; bash /home/ec2-user/config/install-monitoring.sh; sleep 30s; bash /home/ec2-user/config/install-istio.sh; sleep 30s; bash /home/ec2-user/config/install-autoscaling.sh;
 
 #### kops delete cluster --name ${NAME} --yes
