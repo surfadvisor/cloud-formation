@@ -15,10 +15,14 @@ rules:
       - extensions
       - ""
     resources:
-      - autoscaling
       - deployments
       - replicasets
       - services
+    verbs: ["*"]
+  - apiGroups:
+      - autoscaling
+    resources:
+      - horizontalpodautoscalers
     verbs: ["*"]
 
 ---
